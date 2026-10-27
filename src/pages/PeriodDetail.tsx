@@ -1,9 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
 import { eraLabel, getPeriodById, periods } from '../data/periods'
+import { useEvents } from '../hooks/useEvents'
 
 function PeriodDetail() {
   const { id } = useParams<{ id: string }>()
   const period = id ? getPeriodById(id) : undefined
+  const { events } = useEvents(period?.id)
 
   if (!period) {
     return (
@@ -34,6 +36,31 @@ function PeriodDetail() {
 
       <p className="detail-summary">{period.summary}</p>
       <p className="detail-body">{period.detail}</p>
+
+      {events.length > 0 && (
+        <section className="event-section" aria-label="Các mốc thời gian nổi bật">
+          <h2 className="event-section-title">Các mốc thời gian nổi bật</h2>
+          <ol className="event-list">
+            {events.map((event) => (
+              <li key={event.id} className="event-row">
+                <Link
+                  to={`/period/${period.id}/event/${event.id}`}
+                  className="event-card"
+                >
+                  <span className="event-year">{event.yearLabel}</span>
+                  <span className="event-body">
+                    <strong className="event-title">{event.title}</strong>
+                    <span className="event-summary">{event.summary}</span>
+                  </span>
+                  <span className="event-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       <nav className="detail-nav" aria-label="Điều hướng triều đại">
         {prev ? (

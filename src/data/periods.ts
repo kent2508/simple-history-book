@@ -17,6 +17,22 @@ export interface Period {
   detail: string
 }
 
+/** Một sự kiện / mốc thời gian nổi bật bên trong một triều đại */
+export interface HistoryEvent {
+  /** Định danh duy nhất trong phạm vi một triều đại, dùng cho URL */
+  id: string
+  /** Năm diễn ra, dùng để sắp xếp */
+  year: number
+  /** Mốc năm hiển thị, ví dụ "1288" hoặc "40 – 43" */
+  yearLabel: string
+  /** Tên sự kiện */
+  title: string
+  /** Mô tả ngắn hiển thị trên dòng sự kiện */
+  summary: string
+  /** Nội dung chi tiết hiển thị ở trang riêng của sự kiện */
+  detail: string
+}
+
 /**
  * Các triều đại / thời kỳ lịch sử Việt Nam, mỗi triều đại là một mốc riêng,
  * sắp xếp theo thứ tự thời gian. Phân kỳ theo sách giáo khoa lịch sử Việt Nam.

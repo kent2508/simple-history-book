@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import Timeline from '../components/Timeline'
+import { eraLabel, type Era, type Period } from '../data/periods'
 import { usePeriods } from '../hooks/usePeriods'
-import { eraLabel, type Era } from '../data/periods'
 
 type Filter = Era | 'all'
 
@@ -14,23 +14,48 @@ const filters: { value: Filter; label: string }[] = [
   { value: 'modern', label: eraLabel.modern },
 ]
 
+function matchesQuery(p: Period, q: string): boolean {
+  return (
+    p.name.toLowerCase().includes(q) ||
+    p.summary.toLowerCase().includes(q) ||
+    p.years.toLowerCase().includes(q)
+  )
+}
+
 function Home() {
   const { periods, loading, source } = usePeriods()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<Filter>('all')
 
-  const visible = useMemo(() => {
+  // Tính tập mốc cần làm nổi bật và mốc đầu tiên để trượt tới.
+  // Lưu ý: KHÔNG lọc bỏ mốc nào — dòng thời gian luôn hiển thị đầy đủ.
+  const { highlightIds, scrollToId, matchCount } = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return periods.filter((p) => {
+    const hasQuery = q !== ''
+    const hasFilter = filter !== 'all'
+
+    if (!hasQuery && !hasFilter) {
+      return {
+        highlightIds: new Set<string>(),
+        scrollToId: null as string | null,
+        matchCount: periods.length,
+      }
+    }
+
+    const matched = periods.filter((p) => {
       const matchEra = filter === 'all' || p.era === filter
-      const matchText =
-        q === '' ||
-        p.name.toLowerCase().includes(q) ||
-        p.summary.toLowerCase().includes(q) ||
-        p.years.toLowerCase().includes(q)
+      const matchText = !hasQuery || matchesQuery(p, q)
       return matchEra && matchText
     })
+
+    return {
+      highlightIds: new Set(matched.map((p) => p.id)),
+      scrollToId: matched[0]?.id ?? null,
+      matchCount: matched.length,
+    }
   }, [periods, query, filter])
+
+  const isSearching = query.trim() !== '' || filter !== 'all'
 
   return (
     <div className="page">
@@ -54,7 +79,11 @@ function Home() {
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Tìm kiếm triều đại"
           />
-          <div className="filter-group" role="group" aria-label="Lọc theo giai đoạn">
+          <div
+            className="filter-group"
+            role="group"
+            aria-label="Lọc theo giai đoạn"
+          >
             {filters.map((f) => (
               <button
                 key={f.value}
@@ -73,14 +102,20 @@ function Home() {
         {loading ? (
           <p className="timeline-empty">Đang tải dữ liệu…</p>
         ) : (
-          <Timeline periods={visible} />
+          <Timeline
+            periods={periods}
+            highlightIds={highlightIds}
+            scrollToId={scrollToId}
+          />
         )}
       </main>
 
       <footer className="site-footer">
         <p>
-          {visible.length} / {periods.length} dấu mốc · Nguồn dữ liệu:{' '}
-          {source === 'supabase' ? 'Supabase' : 'nội bộ'}
+          {isSearching
+            ? `Khớp ${matchCount} / ${periods.length} dấu mốc`
+            : `${periods.length} dấu mốc`}{' '}
+          · Nguồn dữ liệu: {source === 'supabase' ? 'Supabase' : 'nội bộ'}
         </p>
       </footer>
     </div>

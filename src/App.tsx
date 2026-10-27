@@ -1,15 +1,23 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Home from './pages/Home'
-import PeriodDetail from './pages/PeriodDetail'
+
+// Tách mỗi trang thành chunk riêng (route-based code splitting).
+// Giúp bundle ban đầu nhỏ hơn; Supabase chỉ nằm trong chunk các trang cần nó.
+const Home = lazy(() => import('./pages/Home'))
+const PeriodDetail = lazy(() => import('./pages/PeriodDetail'))
+const EventDetail = lazy(() => import('./pages/EventDetail'))
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/period/:id" element={<PeriodDetail />} />
-      <Route path="*" element={<Home />} />
-    </Routes>
+    <Suspense fallback={<p className="route-loading">Đang tải…</p>}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/period/:id" element={<PeriodDetail />} />
+        <Route path="/period/:id/event/:eventId" element={<EventDetail />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </Suspense>
   )
 }
 
