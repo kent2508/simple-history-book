@@ -1,0 +1,426 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  text-align: left;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 24px 24px;
+  text-align: center;
+
+  @media (max-width: 1024px) {
+    padding: 36px 20px 20px;
+  }
+}
+
+.site-kicker {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.site-title {
+  margin: 0 0 16px;
+}
+
+.site-intro {
+  color: var(--text);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ---------- Controls: search + filter ---------- */
+.controls {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 420px;
+  font: inherit;
+  font-size: 16px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.search-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.filter-chip {
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.filter-chip:hover {
+  border-color: var(--accent-border);
+}
+
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ---------- Timeline ---------- */
+.site-main {
+  flex-grow: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 0 32px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timeline {
+  display: inline-block;
+  min-width: 100%;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
+
+.timeline-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 28px;
+}
+
+/*
+ * Mỗi mốc là một lưới 3 hàng cố định:
+ *   [khoảng thẻ trên] / [hàng trục chứa chấm] / [khoảng thẻ dưới]
+ * Nhờ vậy chấm luôn nằm đúng trên trục và không bao giờ đè lên thẻ.
+ */
+.timeline-item {
+  --card-row: 230px;
+  --axis-row: 48px;
+  flex: 0 0 300px;
+  display: grid;
+  grid-template-rows: var(--card-row) var(--axis-row) var(--card-row);
+  scroll-snap-align: center;
+}
+
+.timeline-card-slot {
+  display: flex;
+}
+
+.timeline-item.above .timeline-card-slot {
+  grid-row: 1;
+  align-items: flex-end;
+}
+
+.timeline-item.below .timeline-card-slot {
+  grid-row: 3;
+  align-items: flex-start;
+}
+
+/* Hàng trục: nằm giữa, chứa chấm và đoạn đường ngang */
+.timeline-axis-slot {
+  grid-row: 2;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Đoạn trục ngang kéo dài hết ô, nối liền các mốc thành một đường */
+.timeline-axis-slot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(-14px - 28px);
+  right: calc(-14px - 28px);
+  height: 3px;
+  transform: translateY(-50%);
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+/* Mốc đầu và cuối bo tròn đẹp bằng cách che phần thừa */
+.timeline-item:first-child .timeline-axis-slot::before {
+  left: 0;
+}
+
+.timeline-item:last-child .timeline-axis-slot::before {
+  right: 0;
+}
+
+.milestone-dot {
+  position: relative;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-bg);
+}
+
+/* Cuống nối thẳng đứng từ chấm tới thẻ */
+.timeline-item.above .milestone-dot::after,
+.timeline-item.below .milestone-dot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 16px;
+  background: var(--accent-border);
+  transform: translateX(-50%);
+}
+
+.timeline-item.above .milestone-dot::after {
+  bottom: 100%;
+}
+
+.timeline-item.below .milestone-dot::after {
+  top: 100%;
+}
+
+/* ---------- Thẻ mốc ---------- */
+.milestone {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.milestone:hover {
+  transform: translateY(-4px);
+}
+
+.milestone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.milestone-era {
+  align-self: flex-start;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.milestone-name {
+  font-size: 19px;
+  margin: 0 0 4px;
+}
+
+.milestone-years {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text-h);
+  margin-bottom: 10px;
+}
+
+.milestone-summary {
+  font-size: 14px;
+  line-height: 148%;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.milestone-more {
+  margin-top: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.timeline-empty {
+  text-align: center;
+  color: var(--text);
+  padding: 48px 24px;
+}
+
+/* ---------- Màu theo giai đoạn ---------- */
+.era-bacthuoc {
+  --era: #6d4c41;
+}
+
+.era-colonial {
+  --era: #e2711d;
+}
+
+.era-modern {
+  --era: #c62828;
+}
+
+.era-bacthuoc .milestone,
+.era-colonial .milestone,
+.era-modern .milestone {
+  border-top-color: var(--era);
+}
+
+.era-bacthuoc .milestone-era,
+.era-colonial .milestone-era,
+.era-modern .milestone-era {
+  color: var(--era);
+  background: color-mix(in srgb, var(--era) 14%, transparent);
+}
+
+.era-bacthuoc .milestone-more,
+.era-colonial .milestone-more,
+.era-modern .milestone-more {
+  color: var(--era);
+}
+
+.era-bacthuoc .milestone-dot,
+.era-colonial .milestone-dot,
+.era-modern .milestone-dot {
+  border-color: var(--era);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--era) 14%, transparent);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 18px 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ---------- Trang chi tiết ---------- */
+.detail-page {
+  --era: var(--accent);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 48px;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.back-link:hover {
+  color: var(--era);
+}
+
+.detail-header h1 {
+  margin: 10px 0 8px;
+}
+
+.detail-years {
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--text-h);
+}
+
+.detail-summary {
+  font-size: 19px;
+  line-height: 150%;
+  color: var(--text-h);
+  margin: 28px 0 16px;
+}
+
+.detail-body {
+  font-size: 17px;
+  line-height: 165%;
+  color: var(--text);
+}
+
+.detail-notfound {
+  font-size: 18px;
+  color: var(--text-h);
+  margin-bottom: 16px;
+}
+
+.detail-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.detail-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-h);
+  max-width: 48%;
+}
+
+.detail-nav-link span {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.detail-nav-link.next {
+  text-align: right;
+  margin-left: auto;
+}
+
+.detail-nav-link:hover strong {
+  color: var(--era);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .timeline-item {
+    --card-row: 210px;
+    flex-basis: 260px;
+  }
+}
