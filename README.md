@@ -111,6 +111,19 @@ Cả hai dùng `on conflict ... do update` nên chạy lại nhiều lần an to
 Nếu chưa tạo bảng, ứng dụng tự fallback về dữ liệu tĩnh trong `src/data/`
 (`periods.ts` và `events.ts`), nên web vẫn chạy đầy đủ.
 
+### Cập nhật sự kiện tự động
+
+`src/data/events.ts` là nguồn gốc dữ liệu sự kiện. Sau khi sửa file này, đồng bộ
+lên bảng `events` của Supabase bằng:
+
+```bash
+npm run seed:events
+```
+
+Script `scripts/seed-events.mjs` upsert toàn bộ sự kiện (không trùng lặp nhờ khóa
+`period_id,id`). Script cần `SUPABASE_SERVICE_ROLE_KEY` trong `.env` — key quản trị
+này **chỉ dùng ở local**, không đưa vào frontend và không commit.
+
 ## Tối ưu bundle
 
 Các trang (`Home`, `PeriodDetail`, `EventDetail`) được nạp bằng `React.lazy`
