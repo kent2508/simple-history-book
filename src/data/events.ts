@@ -8,22 +8,76 @@ import type { HistoryEvent } from './periods'
 export const eventsByPeriod: Record<string, HistoryEvent[]> = {
   'van-lang': [
     {
-      id: 'lap-nuoc',
+      id: 'kinh-duong-vuong',
       year: -2879,
-      yearLabel: '~2879 TCN',
-      title: 'Lập nước Văn Lang',
-      summary: 'Các vua Hùng dựng nên nhà nước đầu tiên của người Việt.',
+      yearLabel: '2879 TCN',
+      title: 'Kinh Dương Vương lập nước Xích Quỷ',
+      summary: 'Mốc khởi đầu theo truyền thống, chưa được khảo cổ xác nhận.',
       detail:
-        'Theo truyền thuyết, Kinh Dương Vương và sau đó là các vua Hùng lập nên nhà nước Văn Lang, đặt kinh đô ở Phong Châu. Đây được xem là nhà nước sơ khai đầu tiên trong lịch sử dân tộc, gắn với truyền thuyết Con Rồng cháu Tiên và bọc trăm trứng của Lạc Long Quân – Âu Cơ.',
+        'Theo truyền thuyết, Kinh Dương Vương lập nước Xích Quỷ. Đây là mốc khởi đầu thường được nhắc đến trong truyền thống lịch sử, chưa được khảo cổ học xác nhận.',
     },
     {
-      id: 'trong-dong',
-      year: -700,
-      yearLabel: '~700 TCN',
-      title: 'Văn hóa Đông Sơn & trống đồng',
-      summary: 'Nền văn minh sông Hồng rực rỡ với kỹ nghệ đúc đồng.',
+      id: 'lac-long-quan-au-co',
+      year: -2800,
+      yearLabel: 'Thời kỳ Lạc Long Quân – Âu Cơ',
+      title: 'Truyền thuyết Con Rồng cháu Tiên',
+      summary: 'Bọc trăm trứng nở thành 100 người con.',
       detail:
-        'Văn hóa Đông Sơn phát triển rực rỡ với đỉnh cao là những chiếc trống đồng tinh xảo, phản ánh đời sống nông nghiệp lúa nước, tín ngưỡng và tổ chức xã hội của cư dân Lạc Việt thời Văn Lang.',
+        'Truyền thuyết Con Rồng cháu Tiên: Lạc Long Quân và Âu Cơ sinh ra một bọc trăm trứng, nở thành 100 người con, biểu tượng cho nguồn gốc chung và tinh thần đoàn kết của người Việt.',
+    },
+    {
+      id: 'hinh-thanh-van-lang',
+      year: -700,
+      yearLabel: 'Khoảng thế kỷ VII TCN',
+      title: 'Hình thành nhà nước Văn Lang',
+      summary: 'Thủ lĩnh đứng đầu lấy hiệu Hùng Vương.',
+      detail:
+        'Nhà nước Văn Lang được hình thành theo cách định niên đại của một số nghiên cứu lịch sử; thủ lĩnh đứng đầu lấy hiệu Hùng Vương.',
+    },
+    {
+      id: 'kinh-do-phong-chau',
+      year: -690,
+      yearLabel: 'Thời kỳ các Vua Hùng',
+      title: 'Kinh đô Phong Châu',
+      summary: 'Trung tâm Văn Lang ở vùng Việt Trì, Phú Thọ ngày nay.',
+      detail:
+        'Văn Lang được cho là có kinh đô tại Phong Châu, thuộc khu vực Việt Trì, Phú Thọ ngày nay; lãnh thổ gồm nhiều bộ lạc người Lạc Việt.',
+    },
+    {
+      id: 'nong-nghiep-lua-nuoc',
+      year: -680,
+      yearLabel: 'Trong thời kỳ Văn Lang',
+      title: 'Nông nghiệp lúa nước & tổ chức xã hội',
+      summary: 'Xây dựng làng xóm, quản lý xã hội sơ khai.',
+      detail:
+        'Nông nghiệp trồng lúa nước phát triển; cư dân xây dựng làng xóm, tổ chức cộng đồng và từng bước hình thành các hình thức quản lý xã hội sơ khai.',
+    },
+    {
+      id: 'van-hoa-dong-son',
+      year: -650,
+      yearLabel: 'Khoảng thế kỷ VII–III TCN',
+      title: 'Văn hóa Đông Sơn & trống đồng',
+      summary: 'Nghề đúc đồng, tiêu biểu là trống đồng Đông Sơn.',
+      detail:
+        'Văn hóa Đông Sơn phát triển với nghề đúc đồng, chế tác công cụ và vũ khí, tiêu biểu là trống đồng Đông Sơn. Đây là một trong những cơ sở khảo cổ quan trọng để nghiên cứu xã hội người Việt cổ.',
+    },
+    {
+      id: 'thanh-giong',
+      year: -300,
+      yearLabel: 'Giai đoạn cuối thời Văn Lang',
+      title: 'Truyền thuyết Thánh Gióng',
+      summary: 'Hùng Vương thứ VI gắn với chuyện đánh giặc Ân.',
+      detail:
+        'Theo truyền thuyết lịch sử, đời Hùng Vương thứ VI gắn với câu chuyện Thánh Gióng đánh giặc Ân. Đây là truyền thuyết tiêu biểu về tinh thần chống ngoại xâm, không phải sự kiện đã được xác nhận đầy đủ bằng tư liệu đương thời.',
+    },
+    {
+      id: 'thuc-phan-chiem-van-lang',
+      year: -258,
+      yearLabel: '258 TCN',
+      title: 'Thục Phán chấm dứt thời kỳ Văn Lang',
+      summary: 'Đánh bại Hùng Vương thứ XVIII, lập nước Âu Lạc.',
+      detail:
+        'Theo niên đại truyền thống, Thục Phán đánh bại Hùng Vương thứ XVIII, chấm dứt thời kỳ Văn Lang và lập nước Âu Lạc.',
     },
   ],
   'au-lac': [
@@ -34,25 +88,70 @@ export const eventsByPeriod: Record<string, HistoryEvent[]> = {
       title: 'Thục Phán lập nước Âu Lạc',
       summary: 'Hợp nhất Âu Việt và Lạc Việt, xưng An Dương Vương.',
       detail:
-        'Thục Phán lãnh đạo liên minh Âu Việt – Lạc Việt, lập nên nước Âu Lạc, xưng An Dương Vương, dời đô về vùng Cổ Loa. Đây là bước phát triển cao hơn của nhà nước sơ khai người Việt.',
+        'Theo niên đại truyền thống, Thục Phán đánh bại vua Hùng cuối cùng, hợp nhất người Âu Việt và Lạc Việt, lập nước Âu Lạc và xưng là An Dương Vương.',
+    },
+    {
+      id: 'dinh-do-co-loa',
+      year: -256,
+      yearLabel: 'Sau khi lập nước',
+      title: 'Định đô ở Cổ Loa',
+      summary: 'Trung tâm chính trị và quân sự của nước Âu Lạc.',
+      detail:
+        'An Dương Vương chọn Cổ Loa (nay thuộc Đông Anh, Hà Nội) làm kinh đô, xây dựng trung tâm chính trị và quân sự của nước Âu Lạc.',
     },
     {
       id: 'thanh-co-loa',
-      year: -250,
-      yearLabel: '~250 TCN',
-      title: 'Xây thành Cổ Loa',
-      summary: 'Tòa thành xoáy ốc kiên cố cùng nỏ Liên Châu.',
+      year: -215,
+      yearLabel: 'Khoảng cuối thế kỷ III TCN',
+      title: 'Xây dựng thành Cổ Loa',
+      summary: 'Hệ thống thành đất, hào nước và công trình phòng thủ.',
       detail:
-        'An Dương Vương cho xây thành Cổ Loa với các vòng thành xoáy trôn ốc độc đáo, kết hợp hào nước và nỏ Liên Châu (nỏ thần), trở thành công trình quân sự – kiến trúc tiêu biểu của thời kỳ dựng nước.',
+        'Thành Cổ Loa được xây dựng và củng cố với hệ thống thành đất, hào nước và các công trình phòng thủ. Đây là một công trình quân sự tiêu biểu của thời kỳ cổ đại Việt Nam.',
     },
     {
-      id: 'mat-nuoc',
+      id: 'tan-tien-phuong-nam',
+      year: -214,
+      yearLabel: '214 TCN',
+      title: 'Nhà Tần tiến quân xuống phương Nam',
+      summary: 'Chinh phục các vùng đất của người Bách Việt.',
+      detail:
+        'Nhà Tần mở cuộc tiến quân xuống phương Nam, chinh phục các vùng đất của người Bách Việt. Cuộc bành trướng này dẫn đến xung đột kéo dài với các cộng đồng cư dân bản địa.',
+    },
+    {
+      id: 'khang-chien-chong-tan',
+      year: -213,
+      yearLabel: 'Khoảng 214 – 208 TCN',
+      title: 'Kháng chiến chống quân Tần',
+      summary: 'Thục Phán cùng cư dân Tây Âu, Lạc Việt chống Tần.',
+      detail:
+        'Theo một số tài liệu lịch sử Việt Nam, Thục Phán cùng các thủ lĩnh và cư dân Tây Âu, Lạc Việt lãnh đạo cuộc kháng chiến chống quân Tần. Các nguồn sử liệu có khác biệt về diễn biến và cách xác định niên đại của cuộc chiến.',
+    },
+    {
+      id: 'no-than-kim-quy',
+      year: -212,
+      yearLabel: 'Thời An Dương Vương',
+      title: 'Kỹ thuật quân sự & truyền thuyết nỏ thần',
+      summary: 'Chế tạo nỏ và mũi tên đồng; truyền thuyết thần Kim Quy.',
+      detail:
+        'Kỹ thuật quân sự phát triển, tiêu biểu là việc chế tạo và sử dụng nỏ cùng các mũi tên đồng. Truyền thuyết dân gian gắn thành Cổ Loa với nỏ thần và thần Kim Quy.',
+    },
+    {
+      id: 'ket-thuc-khang-chien-tan',
       year: -208,
       yearLabel: '208 TCN',
-      title: 'Âu Lạc rơi vào tay Triệu Đà',
-      summary: 'Gắn với truyền thuyết Mỵ Châu – Trọng Thủy.',
+      title: 'Mốc kết thúc kháng chiến chống Tần',
+      summary: 'Niên đại truyền thống có nhiều cách xác định khác nhau.',
       detail:
-        'Triệu Đà dùng mưu kế đánh chiếm Âu Lạc, chấm dứt nhà nước của An Dương Vương. Sự kiện gắn với truyền thuyết nỏ thần và bi kịch Mỵ Châu – Trọng Thủy, bài học cảnh giác được truyền lại muôn đời.',
+        'Theo một cách xác định niên đại, đây là mốc kết thúc cuộc kháng chiến chống Tần và gắn với sự hình thành Âu Lạc. Một số niên biểu truyền thống khác lại lấy năm này làm mốc kết thúc thời kỳ trị vì của An Dương Vương.',
+    },
+    {
+      id: 'my-chau-trong-thuy',
+      year: -207,
+      yearLabel: 'Cuối thời Âu Lạc – theo truyền thuyết',
+      title: 'Truyền thuyết Mỵ Châu – Trọng Thủy',
+      summary: 'Bài học cảnh giác và bảo vệ đất nước.',
+      detail:
+        'Truyện Mỵ Châu – Trọng Thủy kể về việc Trọng Thủy lấy cắp bí mật nỏ thần, dẫn đến thất bại của An Dương Vương trước Triệu Đà. Câu chuyện phản ánh bài học về cảnh giác và bảo vệ đất nước, nhưng không thể xem toàn bộ tình tiết là sự kiện đã được xác minh.',
     },
   ],
   trieu: [

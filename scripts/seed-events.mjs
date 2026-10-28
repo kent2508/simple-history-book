@@ -27,7 +27,7 @@ try {
   if (payload.role !== 'service_role') {
     console.error(
       `SUPABASE_SERVICE_ROLE_KEY có role="${payload.role}", cần "service_role". ` +
-        'Lấy đúng key tại Supabase → Project Settings → API → service_role.',
+      'Lấy đúng key tại Supabase → Project Settings → API → service_role.',
     )
     process.exit(1)
   }
@@ -57,7 +57,7 @@ for (const [periodId, events] of Object.entries(eventsByPeriod)) {
   })
 }
 
-console.log(`Chuẩn bị upsert ${rows.length} sự kiện…`)
+console.log(`Chuẩn bị đồng bộ ${rows.length} sự kiện…`)
 
 const { error } = await supabase
   .from('events')
@@ -66,6 +66,41 @@ const { error } = await supabase
 if (error) {
   console.error('Lỗi khi upsert:', error.message)
   process.exit(1)
+}
+
+// Đồng bộ đầy đủ: xóa các sự kiện còn trên Supabase nhưng không còn trong
+// events.ts, để file dữ liệu là nguồn gốc sự thật duy nhất.
+const { data: existing, error: fetchError } = await supabase
+  .from('events')
+  .select('period_id, id')
+
+if (fetchError) {
+  console.error('Không đọc được dữ liệu hiện có để đồng bộ:', fetchError.message)
+  process.exit(1)
+}
+
+const wanted = new Set(rows.map((r) => `${r.period_id}::${r.id}`))
+const orphans = existing.filter(
+  (r) => !wanted.has(`${r.period_id}::${r.id}`),
+)
+
+for (const o of orphans) {
+  const { error: delError } = await supabase
+    .from('events')
+    .delete()
+    .eq('period_id', o.period_id)
+    .eq('id', o.id)
+  if (delError) {
+    console.error(
+      `Không xóa được sự kiện mồ côi ${o.period_id}/${o.id}:`,
+      delError.message,
+    )
+    process.exit(1)
+  }
+}
+
+if (orphans.length > 0) {
+  console.log(`Đã xóa ${orphans.length} sự kiện không còn trong events.ts.`)
 }
 
 // Xác nhận lại tổng số dòng trong bảng.
