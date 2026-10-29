@@ -552,3 +552,358 @@
     flex-basis: 260px;
   }
 }
+
+/* ======================= Auth & chỉnh sửa ======================= */
+
+/* Thanh trạng thái đăng nhập — hiện ở mọi trang, dính trên cùng */
+.auth-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 24px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.auth-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  text-decoration: none;
+}
+
+.auth-user:hover {
+  color: var(--accent);
+}
+
+.role-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--accent);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.auth-bar-btn {
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.auth-bar-btn:hover {
+  border-color: var(--accent-border);
+}
+
+/* Modal chung */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.modal-close:hover {
+  background: var(--code-bg);
+}
+
+.modal-title {
+  margin: 0 0 20px;
+}
+
+/* OAuth (vỏ) */
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: #fff;
+  transition: filter 0.2s;
+}
+
+.oauth-btn:hover {
+  filter: brightness(1.08);
+}
+
+.oauth-icon {
+  flex: 0 0 auto;
+}
+
+/* Màu đặc trưng, chữ + icon màu trắng */
+.oauth-google {
+  background: #db4437;
+}
+
+.oauth-facebook {
+  background: #1877f2;
+}
+
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text);
+  font-size: 13px;
+  margin: 18px 0;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.oauth-divider span {
+  padding: 0 12px;
+}
+
+/* Form (auth + event) */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.auth-form input:focus-visible,
+.auth-form select:focus-visible,
+.auth-form textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.auth-form textarea {
+  resize: vertical;
+}
+
+.auth-error {
+  color: #c62828;
+  font-size: 14px;
+}
+
+.auth-submit {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.auth-switch {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.auth-switch button {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Nút chèn trước/sau trong danh sách sự kiện (hiện khi hover) */
+.event-row {
+  position: relative;
+}
+
+.insert-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border: 1px dashed var(--accent-border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.event-row:hover .insert-btn,
+.insert-btn:focus-visible {
+  opacity: 1;
+}
+
+.insert-before {
+  top: -10px;
+}
+
+.insert-after {
+  bottom: -10px;
+}
+
+/* Nút hành động trong trang chi tiết sự kiện */
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.action-btn {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.action-btn:hover {
+  border-color: var(--accent-border);
+}
+
+.action-btn.edit {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- Trang cá nhân ---------- */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px 20px;
+  margin: 0 0 28px;
+}
+
+.profile-grid dt {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.profile-grid dd {
+  margin: 0;
+  color: var(--text-h);
+}
+
+.profile-saved {
+  color: #2e7d32;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.profile-form-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+  }
+
+  .profile-grid dd {
+    margin-bottom: 10px;
+  }
+}

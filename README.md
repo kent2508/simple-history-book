@@ -105,16 +105,21 @@ Hai script SQL trong thư mục `supabase/`, chạy trong Supabase → SQL Edito
 - `schema.sql` — bảng `periods` (18 triều đại) + RLS + policy đọc công khai.
 - `events.sql` — bảng `events` (các mốc sự kiện trong từng triều đại), tham chiếu
   `periods.id` qua khóa ngoại. **Chạy sau `schema.sql`.**
+- `auth.sql` — bảng `profiles`, cột `events.created_by`, và RLS cho phép người
+  dùng đã đăng nhập thêm/sửa/xóa sự kiện. **Chạy sau `events.sql`.**
 
-Cả hai dùng `on conflict ... do update` nên chạy lại nhiều lần an toàn (idempotent).
+Các script dùng `on conflict ... do update` / `if not exists` nên chạy lại nhiều
+lần an toàn (idempotent).
 
 Nếu chưa tạo bảng, ứng dụng tự fallback về dữ liệu tĩnh trong `src/data/`
 (`periods.ts` và `events.ts`), nên web vẫn chạy đầy đủ.
 
 ### Cập nhật sự kiện tự động
 
-`src/data/events.ts` là nguồn gốc dữ liệu sự kiện. Sau khi sửa file này, đồng bộ
-lên bảng `events` của Supabase bằng:
+`src/data/events.ts` chứa dữ liệu seed ban đầu. Từ khi bật tính năng chỉnh sửa
+trên web, **Supabase là nguồn gốc sự thật** — sự kiện có thể do người dùng thêm/sửa
+trực tiếp. Vì vậy `seed:events` giờ **chỉ upsert, không xóa** (tránh xóa nhầm dữ
+liệu người dùng). Đồng bộ seed từ file lên Supabase bằng:
 
 ```bash
 npm run seed:events
@@ -123,6 +128,20 @@ npm run seed:events
 Script `scripts/seed-events.mjs` upsert toàn bộ sự kiện (không trùng lặp nhờ khóa
 `period_id,id`). Script cần `SUPABASE_SERVICE_ROLE_KEY` trong `.env` — key quản trị
 này **chỉ dùng ở local**, không đưa vào frontend và không commit.
+
+## Xác thực & chỉnh sửa nội dung
+
+Dùng Supabase Auth (email/password; Google/Facebook để vỏ, bổ sung sau). Người
+dùng chỉ cần đăng nhập khi thực hiện thao tác chỉnh sửa — một modal đăng nhập/đăng
+ký sẽ hiện lên. Đăng ký tạo một bản ghi trong bảng `profiles`.
+
+Giai đoạn xây dựng nội dung: mọi user đã đăng nhập đều được thêm/sửa sự kiện. Cột
+`events.created_by` ghi lại người tạo để sau này siết quyền theo vai trò.
+
+Cấu hình cần làm trên Supabase Dashboard:
+
+- Authentication → Providers → Email: tắt **Confirm email** (để đăng ký dùng ngay).
+- Authentication → URL Configuration: thêm URL local và production vào Redirect URLs.
 
 ## Tối ưu bundle
 

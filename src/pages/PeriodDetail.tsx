@@ -1,11 +1,27 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import AuthModal from '../auth/AuthModal'
+import { useAuth } from '../auth/useAuth'
+import EventForm from '../components/EventForm'
 import { eraLabel, getPeriodById, periods } from '../data/periods'
 import { useEvents } from '../hooks/useEvents'
+import { insertEventRelative, type EventInput } from '../lib/eventsApi'
+
+interface InsertTarget {
+  anchorId: string
+  position: 'before' | 'after'
+}
 
 function PeriodDetail() {
   const { id } = useParams<{ id: string }>()
   const period = id ? getPeriodById(id) : undefined
-  const { events } = useEvents(period?.id)
+  const { events, refetch } = useEvents(period?.id)
+  const { user } = useAuth()
+
+  const [showAuth, setShowAuth] = useState(false)
+  const [insertTarget, setInsertTarget] = useState<InsertTarget | null>(null)
+  // Lưu ý định sau khi đăng nhập xong thì mở lại form chèn
+  const [pending, setPending] = useState<InsertTarget | null>(null)
 
   if (!period) {
     return (
@@ -21,6 +37,27 @@ function PeriodDetail() {
   const index = periods.findIndex((p) => p.id === period.id)
   const prev = index > 0 ? periods[index - 1] : undefined
   const next = index < periods.length - 1 ? periods[index + 1] : undefined
+
+  function requestInsert(target: InsertTarget) {
+    if (!user) {
+      setPending(target)
+      setShowAuth(true)
+      return
+    }
+    setInsertTarget(target)
+  }
+
+  async function handleInsert(input: EventInput) {
+    if (!period || !insertTarget) return
+    await insertEventRelative(
+      period.id,
+      events,
+      insertTarget.anchorId,
+      insertTarget.position,
+      input,
+    )
+    refetch()
+  }
 
   return (
     <article className={`detail-page era-${period.era}`}>
@@ -38,11 +75,26 @@ function PeriodDetail() {
       <p className="detail-body">{period.detail}</p>
 
       {events.length > 0 && (
-        <section className="event-section" aria-label="Các mốc thời gian nổi bật">
+        <section
+          className="event-section"
+          aria-label="Các mốc thời gian nổi bật"
+        >
           <h2 className="event-section-title">Các mốc thời gian nổi bật</h2>
           <ol className="event-list">
             {events.map((event) => (
               <li key={event.id} className="event-row">
+                <button
+                  type="button"
+                  className="insert-btn insert-before"
+                  onClick={() =>
+                    requestInsert({ anchorId: event.id, position: 'before' })
+                  }
+                  aria-label={`Thêm sự kiện trước "${event.title}"`}
+                  title="Thêm sự kiện phía trước"
+                >
+                  + Thêm trước
+                </button>
+
                 <Link
                   to={`/period/${period.id}/event/${event.id}`}
                   className="event-card"
@@ -56,6 +108,18 @@ function PeriodDetail() {
                     →
                   </span>
                 </Link>
+
+                <button
+                  type="button"
+                  className="insert-btn insert-after"
+                  onClick={() =>
+                    requestInsert({ anchorId: event.id, position: 'after' })
+                  }
+                  aria-label={`Thêm sự kiện sau "${event.title}"`}
+                  title="Thêm sự kiện phía sau"
+                >
+                  + Thêm sau
+                </button>
               </li>
             ))}
           </ol>
@@ -80,6 +144,32 @@ function PeriodDetail() {
           <span />
         )}
       </nav>
+
+      {showAuth && (
+        <AuthModal
+          onClose={() => {
+            setShowAuth(false)
+            setPending(null)
+          }}
+          onSuccess={() => {
+            if (pending) setInsertTarget(pending)
+            setPending(null)
+          }}
+        />
+      )}
+
+      {insertTarget && (
+        <EventForm
+          title={
+            insertTarget.position === 'before'
+              ? 'Thêm sự kiện phía trước'
+              : 'Thêm sự kiện phía sau'
+          }
+          submitLabel="Thêm sự kiện"
+          onSubmit={handleInsert}
+          onClose={() => setInsertTarget(null)}
+        />
+      )}
     </article>
   )
 }

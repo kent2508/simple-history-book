@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "seed:events": "node --env-file=.env scripts/seed-events.mjs"
+    "seed:events": "node --env-file=.env scripts/seed-events.mjs",
+    "create:admin": "node --env-file=.env scripts/create-admin.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

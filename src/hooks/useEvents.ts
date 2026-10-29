@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getEvents as getStaticEvents } from '../data/events'
 import type { HistoryEvent } from '../data/periods'
 import { supabase } from '../lib/supabase'
@@ -7,6 +7,7 @@ interface UseEventsResult {
   events: HistoryEvent[]
   loading: boolean
   source: 'supabase' | 'static'
+  refetch: () => void
 }
 
 interface SupabaseState {
@@ -20,8 +21,10 @@ interface SupabaseState {
  */
 export function useEvents(periodId: string | undefined): UseEventsResult {
   const [remote, setRemote] = useState<SupabaseState | null>(null)
-  // 'done' đánh dấu periodId đã nạp xong từ Supabase (dù có kết quả hay không).
   const [fetchedId, setFetchedId] = useState<string | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  const refetch = useCallback(() => setReloadKey((k) => k + 1), [])
 
   useEffect(() => {
     if (!supabase || !periodId) return
@@ -55,7 +58,7 @@ export function useEvents(periodId: string | undefined): UseEventsResult {
     return () => {
       active = false
     }
-  }, [periodId])
+  }, [periodId, reloadKey])
 
   // Chỉ dùng dữ liệu Supabase nếu nó khớp với periodId hiện tại,
   // tránh hiển thị sự kiện của triều đại cũ trong lúc đổi trang.
@@ -66,12 +69,12 @@ export function useEvents(periodId: string | undefined): UseEventsResult {
       ? getStaticEvents(periodId)
       : []
 
-  // Đang tải khi: có Supabase, có periodId, và chưa nạp xong cho đúng id này.
   const loading = supabase !== null && !!periodId && fetchedId !== periodId
 
   return {
     events,
     loading,
     source: hasRemote ? 'supabase' : 'static',
+    refetch,
   }
 }
